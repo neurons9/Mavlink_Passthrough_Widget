@@ -9,6 +9,7 @@ Bugs and to-do:
 https://cdn.rawgit.com/ArduPilot/ardupilot_wiki/33cd0c2c/images/FrSky_Passthrough_protocol.xlsx
 source:
 https://github.com/ArduPilot/ardupilot/blob/master/libraries/AP_Frsky_Telem/AP_Frsky_Telem.cpp
+So Mav Type and Capacity are wrong
 
 2. vdop seems to get no values
 
