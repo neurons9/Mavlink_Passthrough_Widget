@@ -44,7 +44,7 @@ local function update(myWidget, options)
 	lcd.setColor(CUSTOM_COLOR, myWidget.options.COLOR)
 end
 
-local svr,msg,yaw,pit,rol,mod,arm,sat,alt,spd,dst,vol,cur,drw,cap,lat,lon,hdp,vdp,sat,fix,mav = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+local svr,msg,yaw,pit,rol,mod,arm,sat,alt,msl,spd,dst,vol,cur,drw,cap,lat,lon,hdp,vdp,sat,fix,mav = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 local flightMode = {}
 flightMode[0] = ""
@@ -152,7 +152,7 @@ local function drawTxt()
 	local FLAGS = SMLSIZE + LEFT + CUSTOM_COLOR
 	
 	lcd.drawText(10,50,"FrSky Mavlink Passthrough", 0 + LEFT + CUSTOM_COLOR)
-	lcd.drawLine(10, 70, 470, 70, SOLID, TEXT_BGCOLOR)
+	lcd.drawLine(10, 70, 470, 70, SOLID, CUSTOM_COLOR)
 	
 	lcd.drawText(  10,80, "Msg ASCII:",      FLAGS)
 	lcd.drawText(  10,95, "Msg Raw:",        FLAGS)
@@ -202,7 +202,7 @@ local function drawTxt()
 	
 	lcd.drawText(350,95,mav,        	 FLAGS)
 	
-	lcd.drawText(350,120,alt .. "m",   	 FLAGS)
+	lcd.drawText(350,120,alt .. "m " .. " MSL: " .. msl .. "m",   	 FLAGS)
 	lcd.drawText(350,135,spd .. "km/h",  FLAGS)
 	lcd.drawText(350,150,dst .. "m",     FLAGS)
 	
@@ -217,9 +217,10 @@ end
 
 local function refresh()
 	local i0,i1,i2,v = sportTelemetryPop()
-	if i0 then lcd.drawNumber(280,50,i0, SMLSIZE + LEFT + TEXT_BGCOLOR) end
-	if i1 then lcd.drawNumber(320,50,i1, SMLSIZE + LEFT + TEXT_BGCOLOR) end
-	if i2 then lcd.drawNumber(360,50,i2, SMLSIZE + LEFT + TEXT_BGCOLOR) end
+	local FLAGS = SMLSIZE + LEFT + CUSTOM_COLOR
+	if i0 then lcd.drawNumber(280,50,i0, FLAGS) end
+	if i1 then lcd.drawNumber(320,50,i1, FLAGS) end
+	if i2 then lcd.drawNumber(360,50,i2, FLAGS) end
 	
 	-- GPS ID is outside passthrough
 	gpsLatLon = getValue("GPS")
@@ -245,10 +246,9 @@ local function refresh()
 	if i2 == 20482 then
 		sat = bit32.extract(v,0,4)
 		fix = bit32.extract(v,4,2)
-		hdp = bit32.extract(v,7,7)/10
-		-- no value?
-		vdp = bit32.extract(v,15,7)/10
-		alt = bit32.extract(v,22,9)/10
+		hdp = bit32.extract(v,6,8)/10
+		vdp = bit32.extract(v,14,8)/10
+		msl = bit32.extract(v,22,9)
 		if fix > 3 then fix = 3 end
 	end
 	
@@ -261,12 +261,13 @@ local function refresh()
 	
 	-- unpack 5004 packet
 	if i2 == 20484 then
-		dst = bit32.extract(v,2,10)/10
+		dst = bit32.extract(v,0,12)
+		alt = bit32.extract(v,19,12)/10
 	end
 	
 	-- unpack 5005 packet
 	if i2 == 20485 then
-		spd = bit32.extract(v,0,8) * 0.2
+		spd = bit32.extract(v,9,8) * 0.2
 		yaw = bit32.extract(v,17,11) * 0.2
 	end
 	
