@@ -1,7 +1,7 @@
 # Mavlink_Passthrough_Widget
 Lua Script to get telemetry values from Ardupilot Mavlink to Frsky Passthrough protocol
 
-after long research and try and error i found the folling important information of how to get the bytes:
+after long research and try and error i found this important information of how to get the bytes:
 http://www.craftandtheoryllc.com/forums/topic/a-diy-script-to-rediscover-more-telem-sensors-with-or-without-flightdeck/
 
 Bugs and to-do:
@@ -16,6 +16,8 @@ So Mav Type and Capacity are wrong
 3. change text color in widget options does not work, change the color in line 32 { "COLOR", COLOR, WHITE }
 
 4. don't understand line 219 local i0,i1,i2,v = sportTelemetryPop() i0=27, i1=16, i2 = what we want to have?
+
+5. don't understand Excel sheet 1 byte 10^x and 7 byte value...
 
 <img src="https://github.com/zendrones/Mavlink_Passthrough_Widget/blob/master/mavlink_passthrough.jpg">
 
