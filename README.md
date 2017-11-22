@@ -17,5 +17,7 @@ So Mav Type and Capacity are wrong
 
 4. don't understand line 219 local i0,i1,i2,v = sportTelemetryPop() i0=27, i1=16, i2 = what we want to have?
 
-https://github.com/zendrones/Mavlink_Passthrough_Widget/blob/master/mavlink_passthrough.jpg
+<img src="https://github.com/zendrones/Mavlink_Passthrough_Widget/blob/master/mavlink_passthrough.jpg">
+
+Use a whole telemetry widget screen and turn off trim
 
