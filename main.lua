@@ -46,26 +46,41 @@ end
 
 local svr,msg,yaw,pit,rol,mod,arm,sat,alt,msl,spd,dst,vol,cur,drw,cap,lat,lon,hdp,vdp,sat,fix,mav = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
-local flightMode = {}
-flightMode[0] = ""
-flightMode[1] = "Stabilize"
-flightMode[2] = "Acro"
-flightMode[3] = "Alt Hold"
-flightMode[4] = "Auto"
-flightMode[5] = "Guided"
-flightMode[6] = "Loiter"
-flightMode[7] = "RTL"
-flightMode[8] = "Circle"
-flightMode[10] = "Land"
-flightMode[12] = "Drift"
-flightMode[14] = "Sport"
-flightMode[15] = "Flip"
-flightMode[16] = "Auto-Tune"
-flightMode[17] = "Pos Hold"
-flightMode[18] = "Brake"
-flightMode[19] = "Throw"
-flightMode[20] = "ADSB"
-flightMode[21] = "Guided No GPS"
+local flightMode = {
+			"",             -- 0
+			"STABILIZE",    -- 1
+			"ACRO",         -- 2
+			"ALT HOLD",     -- 3
+			"AUTO",         -- 4
+			"GUIDED",       -- 5
+			"LOITER",       -- 6
+			"RTL",          -- 7
+			"CIRCLE",       -- 8
+			"INVALID MODE", -- 9
+			"LAND",         -- 10
+			"OPTFLOW POS",  -- 11
+			"DRIFT",        -- 12
+			"INVALID MODE", -- 13
+			"SPORT",        -- 14
+			"FLIP MODE",    -- 15
+			"AUTO TUNE",    -- 16
+			"POS HOLD",	-- 17
+			"BRAKE",	-- 18
+			"THROW",	-- 19
+			"ADSB",		-- 20
+			"GUIDED NO GPS"}-- 21
+
+			    
+local severity = {
+			"EMERGENCY",
+  			"ALERT",
+  			"CRITICAL",
+  			"ERROR",
+  			"WARNING",
+  			"NOTICE",
+  			"INFO",
+  			"DEBUG"}
+
 
 local armed = {}
 armed[0] = "disarmed"
