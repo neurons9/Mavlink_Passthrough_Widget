@@ -20,13 +20,7 @@
 --
 --    the rest is documented here:
 --    https://cdn.rawgit.com/ArduPilot/ardupilot_wiki/33cd0c2c/images/FrSky_Passthrough_protocol.xlsx
---
---    modify by nigel for arduino pro mini openxsensor.
---    notes to self, imu reports -17.9 to +17.9, heading reports 0 to 360
 
-
-
---    horus adaption by strgaltdel 2017
 
 local options = {
 	{ "COLOR", COLOR, WHITE }
@@ -46,41 +40,59 @@ end
 
 local svr,msg,yaw,pit,rol,mod,arm,sat,alt,msl,spd,dst,vol,cur,drw,cap,lat,lon,hdp,vdp,sat,fix,mav = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
-local flightMode = {
-			"",             -- 0
-			"STABILIZE",    -- 1
-			"ACRO",         -- 2
-			"ALT HOLD",     -- 3
-			"AUTO",         -- 4
-			"GUIDED",       -- 5
-			"LOITER",       -- 6
-			"RTL",          -- 7
-			"CIRCLE",       -- 8
-			"INVALID MODE", -- 9
-			"LAND",         -- 10
-			"OPTFLOW POS",  -- 11
-			"DRIFT",        -- 12
-			"INVALID MODE", -- 13
-			"SPORT",        -- 14
-			"FLIP MODE",    -- 15
-			"AUTO TUNE",    -- 16
-			"POS HOLD",	-- 17
-			"BRAKE",	-- 18
-			"THROW",	-- 19
-			"ADSB",		-- 20
-			"GUIDED NO GPS"}-- 21
+local iterator = 0
 
-			    
-local severity = {
-			"EMERGENCY",
-  			"ALERT",
-  			"CRITICAL",
-  			"ERROR",
-  			"WARNING",
-  			"NOTICE",
-  			"INFO",
-  			"DEBUG"}
+local mavType = {}
+mavType[0] = "Generic"
+mavType[1] = "Fixed wing aircraft"
+mavType[2] = "Quadrotor"
+mavType[3] = "Coaxial Helicopter"
+mavType[4] = "Helicopter"
+mavType[5] = "Antenna Tracker"
+mavType[6] = "Ground Station"
+mavType[7] = "Airship"
+mavType[8] = "Free Balloon"
+mavType[9] = "Rocket"
+mavType[10] = "Ground Rover"
+mavType[11] = "Boat"
+mavType[12] = "Submarine"
+mavType[13] = "Hexarotor"
+mavType[14] = "Octorotor"
+mavType[15] = "Tricopter"
+mavType[16] = "Flapping Wing"
+mavType[17] = "Kite"
+mavType[18] = "Companion Computer"
+mavType[19] = "Two-rotor VTOL"
+mavType[20] = "Quad-rotor VTOL"
+mavType[21] = "Tiltrotor VTOL"
+mavType[22] = "VTOL"
+mavType[23] = "VTOL"
+mavType[24] = "VTOL"
+mavType[25] = "VTOL"
+mavType[26] = "Gimbal"
+mavType[27] = "ADSB peripheral"
+mavType[28] = "Steerable airfoil"
 
+local flightMode = {}
+flightMode[0] = ""
+flightMode[1] = "Stabilize"
+flightMode[2] = "Acro"
+flightMode[3] = "Alt Hold"
+flightMode[4] = "Auto"
+flightMode[5] = "Guided"
+flightMode[6] = "Loiter"
+flightMode[7] = "RTL"
+flightMode[8] = "Circle"
+flightMode[10] = "Land"
+flightMode[12] = "Drift"
+flightMode[14] = "Sport"
+flightMode[15] = "Flip"
+flightMode[16] = "Auto-Tune"
+flightMode[17] = "Pos Hold"
+flightMode[18] = "Brake"
+flightMode[19] = "Throw"
+flightMode[20] = "ADSB"
+flightMode[21] = "Guided No GPS"
 
 local armed = {}
 armed[0] = "disarmed"
@@ -202,7 +214,7 @@ local function drawTxt()
 	lcd.drawText(120,250,rol .. " deg",  FLAGS)
 	
 	-- second column
-	lcd.drawText(  240,95,"Mav Type:",  FLAGS)
+	lcd.drawText(  240,95,"Mav Type:",   FLAGS)
 	
 	lcd.drawText(  240,120,"Alt:",       FLAGS)
 	lcd.drawText(  240,135,"Speed:",     FLAGS)
@@ -215,7 +227,7 @@ local function drawTxt()
 	lcd.drawText(  240,235,"Sat count:", FLAGS)
 	lcd.drawText(  240,250,"Fix Type:",  FLAGS)
 	
-	lcd.drawText(350,95,mav,        	 FLAGS)
+	lcd.drawText(350,95,mavType[mav],	 FLAGS)
 	
 	lcd.drawText(350,120,alt .. "m " .. " MSL: " .. msl .. "m",   	 FLAGS)
 	lcd.drawText(350,135,spd .. "km/h",  FLAGS)
@@ -236,6 +248,7 @@ local function refresh()
 	if i0 then lcd.drawNumber(280,50,i0, FLAGS) end
 	if i1 then lcd.drawNumber(320,50,i1, FLAGS) end
 	if i2 then lcd.drawNumber(360,50,i2, FLAGS) end
+	lcd.drawNumber(420,50,iterator, FLAGS)
 	
 	-- GPS ID is outside passthrough
 	gpsLatLon = getValue("GPS")
@@ -295,8 +308,10 @@ local function refresh()
 	-- unpack 5007 packet
 	-- offset wrong?
 	if i2 == 20487 then
-		mav = bit32.extract(v,0,8)
-		cap = bit32.extract(v,8,24)
+		--iterator = bit32.extract(v,0,8)
+		iterator = bit32.band(bit32.rshift(v, 24), 0xff)
+		if iterator == 0x1 then mav = bit32.band(v, 0xffffff) end
+		if iterator == 0x4 then cap = bit32.band(v, 0xffffff) end
 	end
 	
 	drawTxt()
