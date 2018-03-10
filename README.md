@@ -11,5 +11,5 @@ http://www.craftandtheoryllc.com/forums/topic/a-diy-script-to-rediscover-more-te
 <img src="https://github.com/zendrones/Mavlink_Passthrough_Widget/blob/master/screenshot_x12s_18-03-10_09-58-45.png">
 
 Copy the script into your Horus SD Card:<br />
-WIDGETS/NEW FOLDER/main.lua
+WIDGETS/NEW FOLDER/main.lua<br />
 and use a whole telemetry widget screen with turn off trim
