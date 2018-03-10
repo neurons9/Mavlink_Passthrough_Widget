@@ -28,14 +28,14 @@ local options = {
 
 -- This function is runned once at the creation of the widget
 local function create(zone, options)
-	lcd.setColor(CUSTOM_COLOR, options.COLOR)
-	local myWidget  = { zone=zone, options=options, counter=0 }
-	return myWidget
+	local context  = { zone=zone, options=options, counter=0 }
+		txtcolor      = context.options.COLOR
+	return context
 end
 
-local function update(myWidget, options)
-	myWidget.options = options
-	lcd.setColor(CUSTOM_COLOR, myWidget.options.COLOR)
+local function update(context, options)
+	context.options = options
+	txtcolor = context.options.COLOR
 end
 
 local svr,msg,yaw,pit,rol,mod,arm,sat,alt,msl,spd,dst,vol,cur,drw,cap,lat,lon,hdp,vdp,sat,fix,mav = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
@@ -176,10 +176,11 @@ local function getMessages(value)
 end
 
 local function drawTxt()
+	lcd.setColor(CUSTOM_COLOR, txtcolor)
 	local FLAGS = SMLSIZE + LEFT + CUSTOM_COLOR
 	
 	lcd.drawText(10,50,"FrSky Mavlink Passthrough", 0 + LEFT + CUSTOM_COLOR)
-	lcd.drawLine(10, 70, 470, 70, SOLID, CUSTOM_COLOR)
+	lcd.drawLine(10, 70, 470, 70, DOTTED, CUSTOM_COLOR)
 	
 	lcd.drawText(  10,80, "Msg ASCII:",      FLAGS)
 	lcd.drawText(  10,95, "Msg Raw:",        FLAGS)
@@ -244,6 +245,7 @@ end
 
 local function refresh()
 	local i0,i1,i2,v = sportTelemetryPop()
+	lcd.setColor(CUSTOM_COLOR, txtcolor)
 	local FLAGS = SMLSIZE + LEFT + CUSTOM_COLOR
 	if i0 then lcd.drawNumber(280,50,i0, FLAGS) end
 	if i1 then lcd.drawNumber(320,50,i1, FLAGS) end
@@ -306,7 +308,6 @@ local function refresh()
 	end
 	
 	-- unpack 5007 packet
-	-- offset wrong?
 	if i2 == 20487 then
 		--iterator = bit32.extract(v,0,8)
 		iterator = bit32.band(bit32.rshift(v, 24), 0xff)
