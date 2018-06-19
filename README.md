@@ -8,7 +8,7 @@ after long research and try and error i found this important information of how 
 http://www.craftandtheoryllc.com/forums/topic/a-diy-script-to-rediscover-more-telem-sensors-with-or-without-flightdeck/
 
 
-<img src="https://github.com/zendrones/Mavlink_Passthrough_Widget/blob/master/screenshot_x12s_18-03-10_09-58-45.png">
+<img src="https://github.com/zendrones/Mavlink_Passthrough_Widget/blob/master/IMG_9206.jpg">
 
 Copy the script into your Horus SD Card:<br />
 WIDGETS/NEW FOLDER/main.lua<br />
