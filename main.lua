@@ -149,9 +149,13 @@ local function drawTxt(context)
 	
 	lcd.drawText(120,80, messages,           FLAGS)
 	
-	lcd.drawNumber(120,95, context.values.tmp, FLAGS)
+	if context.values.tmp < 20 then
+		lcd.drawText(120,95, "to cold",      FLAGS)
+	else
+		lcd.drawText(120,95, context.values.tmp .. " dg",    FLAGS)
+	end
 	
-	lcd.drawText(120,110,flightMode[context.values.mod],FLAGS)
+	lcd.drawText(120,110,flightMode[context.values.mod], FLAGS)
 	lcd.drawText(120,125,armed[context.values.arm], 	 FLAGS)
 	
 	lcd.drawText(120,150,context.values.vol .. "V", 	 FLAGS)
@@ -159,9 +163,9 @@ local function drawTxt(context)
 	lcd.drawText(120,180,context.values.drw .. "mAh", 	 FLAGS)
 	lcd.drawText(120,195,context.values.cap .. "mAh", 	 FLAGS)		
 	
-	lcd.drawText(120,220,context.values.yaw .. " dg",  FLAGS)
-	lcd.drawText(120,235,context.values.pit .. " dg",  FLAGS)
-	lcd.drawText(120,250,context.values.rol .. " dg",  FLAGS)
+	lcd.drawText(120,220,context.values.yaw .. " dg",    FLAGS)
+	lcd.drawText(120,235,context.values.pit .. " dg",    FLAGS)
+	lcd.drawText(120,250,context.values.rol .. " dg",    FLAGS)
 	
 	-- second column
 	lcd.drawText(  240,95,"Mav Type:",   FLAGS)
@@ -226,8 +230,19 @@ function refresh(context)
 	
 	-- unpack 5001 packet
 	if i2 == 20481 then
+	
+		--flightMode = bit32.extract(VALUE,0,5)
+      	--simpleMode = bit32.extract(VALUE,5,2)
+      	--landComplete = bit32.extract(VALUE,7,1)
+      	--statusArmed = bit32.extract(VALUE,8,1)
+      	--battFailsafe = bit32.extract(VALUE,9,1)
+      	--ekfFailsafe = bit32.extract(VALUE,10,2)
+	
 		context.values.mod = bit32.extract(v,0,5)
 		context.values.arm = bit32.extract(v,8,1)
+
+      	context.values.tmp = bit32.extract(v,25,6) + 19
+      
 	end
 	
 	-- unpack 5002 packet
@@ -271,7 +286,7 @@ function refresh(context)
 		paramValue = bit32.extract(v,0,24)
 		if paramId == 1 then context.values.mav = paramValue end
 		if paramId == 4 then context.values.cap = paramValue end
-		if paramId == 6 then context.values.tmp = paramValue end
+		--if paramId == 6 then context.values.tmp = paramValue end
 	end
 	
 	drawTxt(context)
