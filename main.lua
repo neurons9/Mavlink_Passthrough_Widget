@@ -152,7 +152,7 @@ local function drawTxt(context)
 	if context.values.tmp < 20 then
 		lcd.drawText(120,95, "to cold",      FLAGS)
 	else
-		lcd.drawText(120,95, context.values.tmp .. " dg",    FLAGS)
+		lcd.drawText(120,95, context.values.tmp .. "@ C",    FLAGS)
 	end
 	
 	lcd.drawText(120,110,flightMode[context.values.mod], FLAGS)
@@ -163,9 +163,9 @@ local function drawTxt(context)
 	lcd.drawText(120,180,context.values.drw .. "mAh", 	 FLAGS)
 	lcd.drawText(120,195,context.values.cap .. "mAh", 	 FLAGS)		
 	
-	lcd.drawText(120,220,context.values.yaw .. " dg",    FLAGS)
-	lcd.drawText(120,235,context.values.pit .. " dg",    FLAGS)
-	lcd.drawText(120,250,context.values.rol .. " dg",    FLAGS)
+	lcd.drawText(120,220,context.values.yaw .. " @",    FLAGS)
+	lcd.drawText(120,235,context.values.pit .. " @",    FLAGS)
+	lcd.drawText(120,250,context.values.rol .. " @",    FLAGS)
 	
 	-- second column
 	lcd.drawText(  240,95,"Mav Type:",   FLAGS)
